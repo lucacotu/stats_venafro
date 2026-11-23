@@ -61,11 +61,11 @@ const Q = {
   MATCH_BOXSCORE: `query MatchBoxscore($matchFid: String!, $projectKey: String!) {
     matchBy(fid: $matchFid, projectKey: $projectKey) {
       boxscore {
-        homeTeam { team { fid } players { player { fid name lastName number teamFid starting } stats {
+        homeTeam { team { fid } totals { points } players { player { fid name lastName number teamFid starting } stats {
           timePlayed points inArcThrowsMade inArcThrowsFailed outArcThrowsMade outArcThrowsFailed
           freeThrowsMade freeThrowsFailed offensiveRebounds defensiveRebounds assists turnovers steals
           blocks receivedBlocks fouls receivedFouls fibaRating plusMinus } } }
-        awayTeam { team { fid } players { player { fid name lastName number teamFid starting } stats {
+        awayTeam { team { fid } totals { points } players { player { fid name lastName number teamFid starting } stats {
           timePlayed points inArcThrowsMade inArcThrowsFailed outArcThrowsMade outArcThrowsFailed
           freeThrowsMade freeThrowsFailed offensiveRebounds defensiveRebounds assists turnovers steals
           blocks receivedBlocks fouls receivedFouls fibaRating plusMinus } } }
@@ -152,7 +152,10 @@ class Fip {
 // ---------------------------------------------------------------- Helper dati
 const one = (x) => (Array.isArray(x) ? x[0] : x);
 const mBy = (d) => { const x = d?.matchBy; return Array.isArray(x) ? x[0] : x; };
-const isPlayed = (m) => ['FINISHED', 'CLOSED', 'LIVE', 'LIVE_NOT_AVAILABLE'].includes(m?.timeStatus?.status) || m?.scores?.total?.homeScore != null;
+// Giocata solo se ha un punteggio REALE (> 0) o uno stato di fine partita.
+// Le partite future con 0-0 NON devono contare come giocate.
+const isPlayed = (m) => ['FINISHED', 'CLOSED', 'LIVE', 'LIVE_NOT_AVAILABLE'].includes(m?.timeStatus?.status)
+  || Number(m?.scores?.total?.homeScore) > 0 || Number(m?.scores?.total?.awayScore) > 0;
 const num = (x) => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const round1 = (x) => Math.round(x * 10) / 10;
 
@@ -262,36 +265,45 @@ async function collectTeam(fip, seasonId, cfg) {
     position = row?.position ?? null;
   } catch { /* opzionale */ }
 
-  // 4) statistiche squadra dai risultati
-  let pf = 0, ps = 0, g = 0, pfH = 0, psH = 0, gH = 0, pfA = 0, psA = 0, gA = 0, won = 0, lost = 0;
-  const results = [];
-  for (const m of matches) {
-    if (!isPlayed(m)) continue;
-    const tot = m.scores?.total; if (!tot || tot.homeScore == null) continue;
-    const home = isHome(m, mid);
-    const my = num(home ? tot.homeScore : tot.awayScore);
-    const opp = num(home ? tot.awayScore : tot.homeScore);
-    g++; pf += my; ps += opp;
-    if (home) { gH++; pfH += my; psH += opp; } else { gA++; pfA += my; psA += opp; }
-    const w = my > opp;
-    if (w) won++; else if (opp > my) lost++;
-    results.push({ date: m.date, opponent: home ? m.awayTeam?.name : m.homeTeam?.name, home, score: `${tot.homeScore}-${tot.awayScore}`, result: w ? 'V' : (opp > my ? 'P' : 'N') });
-  }
-  const avg = (s, n) => (n ? round1(s / n) : 0);
-  const nextMatch = matches.filter((m) => !isPlayed(m) && new Date(m.date) > Date.now())
-    .map((m) => ({ date: m.date, opponent: isHome(m, mid) ? m.awayTeam?.name : m.homeTeam?.name, home: isHome(m, mid) }))[0] || null;
-
-  // 5) statistiche giocatori dai tabellini di ogni partita giocata
+  // 4) tabellini di ogni partita giocata: da qui prendiamo sia il punteggio reale
+  //    (totali squadra) sia le statistiche dei giocatori.
   const played = matches.filter(isPlayed);
   const boxes = await mapLimit(played, 4, async (m) => {
     try {
       const b = mBy(await fip.query(Q.MATCH_BOXSCORE, { matchFid: m.fid, projectKey: pk }))?.boxscore;
       if (!b) return null;
-      return isHome(m, mid) ? b.homeTeam : b.awayTeam;
+      const home = isHome(m, mid);
+      const mySide = home ? b.homeTeam : b.awayTeam;
+      const oppSide = home ? b.awayTeam : b.homeTeam;
+      return { m, home, mySide, myScore: num(mySide?.totals?.points), oppScore: num(oppSide?.totals?.points) };
     } catch { return null; }
   });
+
+  // 5) statistiche squadra dai punteggi reali dei tabellini
+  let pf = 0, ps = 0, g = 0, pfH = 0, psH = 0, gH = 0, pfA = 0, psA = 0, gA = 0, won = 0, lost = 0;
+  const results = [];
+  for (const bx of boxes) {
+    if (!bx) continue;
+    const { m, home, myScore, oppScore } = bx;
+    if (myScore <= 0 && oppScore <= 0) continue; // nessun punteggio valido
+    g++; pf += myScore; ps += oppScore;
+    if (home) { gH++; pfH += myScore; psH += oppScore; } else { gA++; pfA += myScore; psA += oppScore; }
+    const w = myScore > oppScore;
+    if (w) won++; else if (oppScore > myScore) lost++;
+    const homeScore = home ? myScore : oppScore;
+    const awayScore = home ? oppScore : myScore;
+    results.push({ date: m.date, opponent: home ? m.awayTeam?.name : m.homeTeam?.name, home, score: `${homeScore}-${awayScore}`, result: w ? 'V' : (oppScore > myScore ? 'P' : 'N') });
+  }
+  results.sort((a, b) => new Date(b.date) - new Date(a.date)); // più recenti in alto
+  const avg = (s, n) => (n ? round1(s / n) : 0);
+  const nextMatch = matches.filter((m) => !isPlayed(m) && new Date(m.date).getTime() > Date.now())
+    .sort((a, b) => new Date(a.date) - new Date(b.date))
+    .map((m) => ({ date: m.date, opponent: isHome(m, mid) ? m.awayTeam?.name : m.homeTeam?.name, home: isHome(m, mid) }))[0] || null;
+
+  // 6) aggrego le statistiche giocatori dai tabellini
   const byFid = {};
-  for (const side of boxes) {
+  for (const bx of boxes) {
+    const side = bx?.mySide;
     if (!side) continue;
     for (const x of side.players || []) {
       const p = x.player || {}; const st = x.stats || {}; const fid = p.fid;
@@ -307,7 +319,7 @@ async function collectTeam(fip, seasonId, cfg) {
     }
   }
 
-  // 6) eventuale unione dei giocatori con lo stesso nome (duplicati nei dati)
+  // 7) eventuale unione dei giocatori con lo stesso nome (duplicati nei dati)
   let aggs = Object.values(byFid);
   if (cfg.mergeDuplicates) {
     const byName = {};
@@ -337,7 +349,7 @@ async function collectTeam(fip, seasonId, cfg) {
       pf: avg(pf, g), ps: avg(ps, g),
       pfHome: avg(pfH, gH), psHome: avg(psH, gH),
       pfAway: avg(pfA, gA), psAway: avg(psA, gA),
-      lastResults: results.slice(-5).reverse(),
+      results, // tutte le partite giocate, più recenti in alto
       nextMatch,
     },
     players,

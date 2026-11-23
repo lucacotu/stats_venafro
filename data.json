@@ -11,7 +11,7 @@
       "team": {
         "position": 3, "played": 8, "won": 6, "lost": 2, "points": 12,
         "pf": 73.8, "ps": 60.2, "pfHome": 78.5, "psHome": 58.0, "pfAway": 69.0, "psAway": 62.5,
-        "lastResults": [
+        "results": [
           { "date": "2026-11-16", "opponent": "Caserta", "home": true, "score": "81-66", "result": "V" },
           { "date": "2026-11-09", "opponent": "Napoli", "home": false, "score": "70-74", "result": "P" },
           { "date": "2026-11-02", "opponent": "Salerno", "home": true, "score": "88-60", "result": "V" },
@@ -37,7 +37,7 @@
       "team": {
         "position": 5, "played": 6, "won": 3, "lost": 3, "points": 6,
         "pf": 64.2, "ps": 63.0, "pfHome": 68.0, "psHome": 60.5, "pfAway": 60.3, "psAway": 65.5,
-        "lastResults": [
+        "results": [
           { "date": "2026-11-15", "opponent": "Caserta", "home": true, "score": "72-58", "result": "V" },
           { "date": "2026-11-08", "opponent": "Napoli", "home": false, "score": "55-70", "result": "P" },
           { "date": "2026-11-01", "opponent": "Salerno", "home": true, "score": "66-64", "result": "V" }
