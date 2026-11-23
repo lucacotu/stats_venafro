@@ -1,0 +1,42 @@
+name: Aggiorna statistiche
+
+# Scarica le statistiche e aggiorna data.json, che GitHub Pages pubblica.
+# Orari in UTC: 07:00 e 19:00 = circa 08:00/20:00 (inverno) o 09:00/21:00 (estate) in Italia.
+on:
+  schedule:
+    - cron: '0 7 * * *'
+    - cron: '0 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-stats
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Scarica le statistiche
+        env:
+          FIP_EMAIL: ${{ secrets.FIP_EMAIL }}
+          FIP_PASSWORD: ${{ secrets.FIP_PASSWORD }}
+        run: node fetch-stats.js
+
+      - name: Pubblica data.json se è cambiato
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet || git commit -m "Aggiorna statistiche ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+          git push
