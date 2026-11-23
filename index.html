@@ -41,6 +41,13 @@
   .rrow .rdate{color:var(--muted);font-size:12px;white-space:nowrap}
   .rrow .rscore{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
   .next{font-size:15px}
+  .splits{width:100%;border-collapse:collapse}
+  .splits th,.splits td{padding:8px 10px;text-align:center;font-variant-numeric:tabular-nums}
+  .splits thead th{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.03em;font-weight:600;border-bottom:1px solid var(--line)}
+  .splits tbody th{text-align:left;font-weight:600}
+  .splits tbody tr:not(:last-child) td,.splits tbody tr:not(:last-child) th{border-bottom:1px solid var(--line)}
+  .splits td{font-weight:600}
+  .splits td.pos{color:var(--good)} .splits td.neg{color:var(--bad)}
   .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:8px;-webkit-overflow-scrolling:touch}
   table{border-collapse:collapse;width:100%;min-width:720px;font-variant-numeric:tabular-nums}
   th,td{padding:9px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--line)}
@@ -138,14 +145,16 @@ function teamBoxes(tm){
       <span class="rdate">${fmtDate(r.date)}</span>
       <span class="rscore">${esc(r.score)}</span>
     </div>`).join('') : '<div class="sub" style="padding:4px 2px">Nessuna partita giocata.</div>';
-  const splits=`<div class="results" style="gap:14px">
-     <span class="pill">Casa <b>${s.pfHome}</b>-<b>${s.psHome}</b></span>
-     <span class="pill">Trasferta <b>${s.pfAway}</b>-<b>${s.psAway}</b></span>
-     <span class="pill">Giocate <b>${s.played}</b></span></div>`;
+  const diffCell=(f,a)=>{const d=Math.round((f-a)*10)/10;const cls=d>0?'pos':(d<0?'neg':'');return `<td class="${cls}">${d>0?'+':''}${d}</td>`;};
+  const srow=(lab,f,a)=>`<tr><th>${lab}</th><td>${f}</td><td>${a}</td>${diffCell(f,a)}</tr>`;
+  const splits=`<table class="splits">
+     <thead><tr><th></th><th>Fatti</th><th>Subiti</th><th>+/−</th></tr></thead>
+     <tbody>${srow('Totale',s.pf,s.ps)}${srow('Casa',s.pfHome,s.psHome)}${srow('Trasferta',s.pfAway,s.psAway)}</tbody>
+   </table><div class="sub" style="margin-top:8px">Su ${s.played} partite giocate</div>`;
   const next = s.nextMatch ? `<div class="next">${s.nextMatch.home?'vs':'@'} <b>${esc(s.nextMatch.opponent||'')}</b> · ${fmtDate(s.nextMatch.date)}</div>` : '<span class="sub">Nessuna partita in programma.</span>';
   return `<div class="row2">
     <div class="box"><h3>Risultati</h3><div class="rlist">${results}</div></div>
-    <div class="box"><h3>Prossima partita</h3>${next}<div style="margin-top:14px"></div><h3>Medie casa / trasferta</h3>${splits}</div>
+    <div class="box"><h3>Prossima partita</h3>${next}<div style="margin-top:16px"></div><h3>Medie punti</h3>${splits}</div>
   </div>`;
 }
 
