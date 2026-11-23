@@ -1,0 +1,54 @@
+{
+  "generatedAt": "2026-11-23T07:00:00.000Z",
+  "season": "2025/2026",
+  "teams": [
+    {
+      "key": "u19",
+      "label": "Under 19 Gold Campania",
+      "name": "Basket Venafro",
+      "logo": null,
+      "competition": "Under 19 Maschile Gold Campania",
+      "team": {
+        "position": 3, "played": 8, "won": 6, "lost": 2, "points": 12,
+        "pf": 73.8, "ps": 60.2, "pfHome": 78.5, "psHome": 58.0, "pfAway": 69.0, "psAway": 62.5,
+        "lastResults": [
+          { "date": "2026-11-16", "opponent": "Caserta", "home": true, "score": "81-66", "result": "V" },
+          { "date": "2026-11-09", "opponent": "Napoli", "home": false, "score": "70-74", "result": "P" },
+          { "date": "2026-11-02", "opponent": "Salerno", "home": true, "score": "88-60", "result": "V" },
+          { "date": "2026-10-26", "opponent": "Avellino", "home": false, "score": "65-71", "result": "V" },
+          { "date": "2026-10-19", "opponent": "Benevento", "home": true, "score": "90-55", "result": "V" }
+        ],
+        "nextMatch": { "date": "2026-11-30", "opponent": "Battipaglia", "home": false }
+      },
+      "players": [
+        { "number": "7", "name": "Luca Marino", "games": 8, "min": 1710, "pts": 16.4, "reb": 5.2, "oreb": 1.6, "dreb": 3.6, "ast": 3.1, "stl": 1.4, "blk": 0.4, "tov": 2.0, "pf": 2.2, "plusMinus": 6.1, "rating": 15.3, "fg2": 52.1, "fg3": 36.0, "ft": 74.5, "fg": 47.2, "maxPts": 28 },
+        { "number": "10", "name": "Marco Esposito", "games": 8, "min": 1620, "pts": 13.8, "reb": 7.9, "oreb": 3.0, "dreb": 4.9, "ast": 1.2, "stl": 0.9, "blk": 1.1, "tov": 1.8, "pf": 2.8, "plusMinus": 4.2, "rating": 16.1, "fg2": 58.0, "fg3": 0.0, "ft": 61.0, "fg": 57.0, "maxPts": 22 },
+        { "number": "4", "name": "Davide Russo", "games": 7, "min": 1400, "pts": 11.2, "reb": 2.8, "oreb": 0.7, "dreb": 2.1, "ast": 5.4, "stl": 1.8, "blk": 0.1, "tov": 2.4, "pf": 1.9, "plusMinus": 3.0, "rating": 12.0, "fg2": 49.0, "fg3": 40.2, "ft": 82.0, "fg": 45.5, "maxPts": 19 },
+        { "number": "15", "name": "Simone Ferraro", "games": 8, "min": 980, "pts": 7.5, "reb": 4.1, "oreb": 1.9, "dreb": 2.2, "ast": 0.8, "stl": 0.6, "blk": 0.7, "tov": 1.1, "pf": 2.5, "plusMinus": 1.2, "rating": 8.4, "fg2": 54.0, "fg3": 25.0, "ft": 55.0, "fg": 50.0, "maxPts": 14 },
+        { "number": "22", "name": "Antonio Greco", "games": 6, "min": 720, "pts": 5.0, "reb": 1.8, "oreb": 0.4, "dreb": 1.4, "ast": 1.6, "stl": 0.5, "blk": 0.0, "tov": 0.9, "pf": 1.2, "plusMinus": 0.5, "rating": 5.1, "fg2": 44.0, "fg3": 33.0, "ft": 70.0, "fg": 40.0, "maxPts": 11 }
+      ]
+    },
+    {
+      "key": "u17",
+      "label": "Under 17 Gold Campania",
+      "name": "Basket Venafro",
+      "logo": null,
+      "competition": "Under 17 Maschile Gold Campania",
+      "team": {
+        "position": 5, "played": 6, "won": 3, "lost": 3, "points": 6,
+        "pf": 64.2, "ps": 63.0, "pfHome": 68.0, "psHome": 60.5, "pfAway": 60.3, "psAway": 65.5,
+        "lastResults": [
+          { "date": "2026-11-15", "opponent": "Caserta", "home": true, "score": "72-58", "result": "V" },
+          { "date": "2026-11-08", "opponent": "Napoli", "home": false, "score": "55-70", "result": "P" },
+          { "date": "2026-11-01", "opponent": "Salerno", "home": true, "score": "66-64", "result": "V" }
+        ],
+        "nextMatch": { "date": "2026-11-29", "opponent": "Avellino", "home": true }
+      },
+      "players": [
+        { "number": "9", "name": "Gabriele Costa", "games": 6, "min": 1380, "pts": 14.0, "reb": 4.5, "oreb": 1.2, "dreb": 3.3, "ast": 2.5, "stl": 1.5, "blk": 0.3, "tov": 2.2, "pf": 2.0, "plusMinus": 2.8, "rating": 13.0, "fg2": 50.0, "fg3": 34.0, "ft": 72.0, "fg": 45.0, "maxPts": 24 },
+        { "number": "5", "name": "Francesco Romano", "games": 6, "min": 1200, "pts": 10.5, "reb": 6.2, "oreb": 2.5, "dreb": 3.7, "ast": 1.0, "stl": 0.8, "blk": 0.9, "tov": 1.5, "pf": 2.9, "plusMinus": 1.0, "rating": 12.5, "fg2": 55.0, "fg3": 0.0, "ft": 58.0, "fg": 54.0, "maxPts": 18 },
+        { "number": "12", "name": "Matteo Rizzo", "games": 5, "min": 900, "pts": 8.0, "reb": 2.0, "oreb": 0.4, "dreb": 1.6, "ast": 4.0, "stl": 1.2, "blk": 0.0, "tov": 2.0, "pf": 1.5, "plusMinus": 0.0, "rating": 8.0, "fg2": 47.0, "fg3": 38.0, "ft": 80.0, "fg": 44.0, "maxPts": 15 }
+      ]
+    }
+  ]
+}

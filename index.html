@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basket Venafro — Statistiche</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#161d2c; --panel2:#1d2636; --line:#2a3447;
+    --text:#eef2f8; --muted:#93a0b5; --accent:#ff6b01; --accent2:#2aa7ff;
+    --good:#35c17a; --bad:#ff5d5d; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent2)}
+  .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
+  header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+  .logo{width:46px;height:46px;border-radius:12px;background:var(--panel2);object-fit:contain;flex:none}
+  h1{font-size:22px;margin:0}
+  .sub{color:var(--muted);font-size:13px}
+  .tabs{display:flex;gap:8px;margin:16px 0}
+  .tab{flex:1;max-width:280px;padding:11px 14px;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:12px;font-weight:600;cursor:pointer;text-align:center;transition:.15s}
+  .tab.active{background:var(--accent);border-color:var(--accent);color:#1a1205}
+  .tab .t-sub{display:block;font-weight:500;font-size:12px;opacity:.8;margin-top:2px}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .card .k{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+  .card .v{font-size:24px;font-weight:700;margin-top:3px}
+  .card .v small{font-size:13px;color:var(--muted);font-weight:500}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .box h3{margin:0 0 10px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+  .results{display:flex;gap:6px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border-radius:999px;background:var(--panel2);font-size:13px;border:1px solid var(--line)}
+  .pill b{font-weight:700}
+  .pill .res{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#0c1018}
+  .res.V{background:var(--good)} .res.P{background:var(--bad)} .res.N{background:var(--muted)}
+  .next{font-size:15px}
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;margin-top:8px;-webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse;width:100%;min-width:720px;font-variant-numeric:tabular-nums}
+  th,td{padding:9px 10px;text-align:center;white-space:nowrap;border-bottom:1px solid var(--line)}
+  thead th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;user-select:none}
+  thead th.sorted{color:var(--accent)}
+  thead th .arrow{font-size:10px;opacity:.9}
+  tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+  tbody tr:hover{background:rgba(42,167,255,.07)}
+  td.name,th.name{text-align:left;position:sticky;left:0;background:var(--panel)}
+  tbody tr:nth-child(even) td.name{background:#171f2f}
+  td.num{color:var(--muted);font-weight:700}
+  td.pts{font-weight:700;color:var(--accent)}
+  .foot{color:var(--muted);font-size:12px;margin-top:18px;text-align:center}
+  .loading,.empty{padding:40px;text-align:center;color:var(--muted)}
+  .err{background:rgba(255,93,93,.12);border:1px solid var(--bad);color:#ffd4d4;padding:12px 14px;border-radius:12px;margin-top:10px}
+  @media(max-width:560px){ h1{font-size:19px} .card .v{font-size:20px} .tab{padding:10px} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <img id="logo" class="logo" alt="" hidden>
+    <div>
+      <h1 id="title">Basket Venafro</h1>
+      <div class="sub" id="season">Statistiche</div>
+    </div>
+  </header>
+
+  <div class="tabs" id="tabs"></div>
+  <div id="content"><div class="loading">Carico le statistiche…</div></div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const DATA_URL = 'data.json';
+let DATA = null, current = 0, sortKey = 'pts', sortDir = -1;
+
+const COLS = [
+  { key:'number', label:'#', cls:'num', type:'num' },
+  { key:'name', label:'Giocatore', cls:'name', type:'str' },
+  { key:'games', label:'PG', type:'num' },
+  { key:'min', label:'MIN', type:'min' },
+  { key:'pts', label:'PT', cls:'pts', type:'num' },
+  { key:'reb', label:'RIMB', type:'num' },
+  { key:'ast', label:'AST', type:'num' },
+  { key:'stl', label:'REC', type:'num' },
+  { key:'blk', label:'STO', type:'num' },
+  { key:'tov', label:'PP', type:'num' },
+  { key:'pf', label:'FALLI', type:'num' },
+  { key:'fg2', label:'2P%', type:'pct' },
+  { key:'fg3', label:'3P%', type:'pct' },
+  { key:'ft', label:'TL%', type:'pct' },
+  { key:'rating', label:'VAL', type:'num' },
+  { key:'maxPts', label:'MAX', type:'num' },
+];
+
+const esc = (s) => String(s==null?'':s).replace(/[&<>"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtMin = (s) => { if(!s) return '0:00'; const m=Math.floor(s/60), ss=Math.round(s%60); return m+':'+String(ss).padStart(2,'0'); };
+const fmtPct = (v) => v==null?'–':v+'%';
+const fmtDate = (d) => { try{ return new Date(d).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});}catch{return d;} };
+
+function cellValue(p,col){
+  const v=p[col.key];
+  if(col.type==='min') return fmtMin(v);
+  if(col.type==='pct') return fmtPct(v);
+  if(col.key==='name') return esc(v);
+  if(col.key==='number') return v?('#'+v):'';
+  return v==null?'–':v;
+}
+
+function renderTabs(){
+  const t=document.getElementById('tabs');
+  t.innerHTML = DATA.teams.map((tm,i)=>`<button class="tab ${i===current?'active':''}" data-i="${i}">${esc(tm.label)}<span class="t-sub">${esc(tm.name||'')}</span></button>`).join('');
+  t.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{current=+b.dataset.i; sortKey='pts'; sortDir=-1; render();}));
+}
+
+function teamCards(tm){
+  const s=tm.team; if(!s) return '';
+  const k=(lab,val)=>`<div class="card"><div class="k">${lab}</div><div class="v">${val}</div></div>`;
+  return `<div class="cards">
+    ${k('Posizione', s.position!=null?('<span>'+s.position+'º</span>'):'–')}
+    ${k('Record', s.won+'<small> V</small> · '+s.lost+'<small> P</small>')}
+    ${k('Punti', s.points)}
+    ${k('Media fatti', s.pf+'<small> pt</small>')}
+    ${k('Media subiti', s.ps+'<small> pt</small>')}
+  </div>`;
+}
+function teamBoxes(tm){
+  const s=tm.team; if(!s) return '';
+  const results=(s.lastResults||[]).map(r=>`<span class="pill"><span class="res ${r.result}">${r.result}</span>${r.home?'vs':'@'} ${esc(r.opponent||'')} <b>${esc(r.score)}</b></span>`).join('') || '<span class="sub">Nessuna partita giocata.</span>';
+  const splits=`<div class="results" style="gap:14px">
+     <span class="pill">Casa <b>${s.pfHome}</b>-<b>${s.psHome}</b></span>
+     <span class="pill">Trasferta <b>${s.pfAway}</b>-<b>${s.psAway}</b></span>
+     <span class="pill">Giocate <b>${s.played}</b></span></div>`;
+  const next = s.nextMatch ? `<div class="next">${s.nextMatch.home?'vs':'@'} <b>${esc(s.nextMatch.opponent||'')}</b> · ${fmtDate(s.nextMatch.date)}</div>` : '<span class="sub">Nessuna partita in programma.</span>';
+  return `<div class="row2">
+    <div class="box"><h3>Ultimi risultati</h3><div class="results">${results}</div></div>
+    <div class="box"><h3>Prossima partita</h3>${next}<div style="margin-top:12px"></div><h3>Medie casa / trasferta</h3>${splits}</div>
+  </div>`;
+}
+
+function sortPlayers(players){
+  const col=COLS.find(c=>c.key===sortKey)||COLS[4];
+  return players.slice().sort((a,b)=>{
+    let x=a[sortKey], y=b[sortKey];
+    if(col.type==='str'){ x=String(x||'').toLowerCase(); y=String(y||'').toLowerCase(); return x<y?-sortDir:x>y?sortDir:0; }
+    x=(x==null?-Infinity:Number(x)); y=(y==null?-Infinity:Number(y));
+    return (x-y)*sortDir;
+  });
+}
+
+function renderTable(tm){
+  if(tm.error) return `<div class="err">Dati non disponibili per questa squadra: ${esc(tm.error)}</div>`;
+  const players=tm.players||[];
+  if(!players.length) return '<div class="empty">Nessuna statistica giocatori disponibile.</div>';
+  const head=COLS.map(c=>{
+    const on=c.key===sortKey;
+    return `<th class="${c.cls||''} ${on?'sorted':''}" data-k="${c.key}">${c.label}${on?` <span class="arrow">${sortDir<0?'▼':'▲'}</span>`:''}</th>`;
+  }).join('');
+  const rows=sortPlayers(players).map(p=>`<tr>${COLS.map(c=>`<td class="${c.cls||''}">${cellValue(p,c)}</td>`).join('')}</tr>`).join('');
+  return `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="sub" style="margin-top:8px">Tocca un'intestazione per ordinare. Medie per partita.</div>`;
+}
+
+function render(){
+  const tm=DATA.teams[current]; if(!tm) return;
+  document.getElementById('title').textContent = tm.name || 'Basket Venafro';
+  document.getElementById('season').textContent = (tm.competition||'') + (DATA.season?(' · '+DATA.season):'');
+  const logo=document.getElementById('logo');
+  if(tm.logo){ logo.src=tm.logo; logo.hidden=false; } else logo.hidden=true;
+  renderTabs();
+  document.getElementById('content').innerHTML = teamCards(tm)+teamBoxes(tm)+renderTable(tm);
+  document.querySelectorAll('thead th').forEach(th=>th.addEventListener('click',()=>{
+    const k=th.dataset.k; if(!k) return;
+    if(k===sortKey) sortDir=-sortDir; else { sortKey=k; sortDir=(k==='name'||k==='number')?1:-1; }
+    render();
+  }));
+  const gen=DATA.generatedAt?new Date(DATA.generatedAt):null;
+  document.getElementById('foot').innerHTML = gen?('Aggiornato il '+gen.toLocaleString('it-IT')):'';
+}
+
+async function load(){
+  try{
+    const res=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    DATA=await res.json();
+    if(!DATA.teams||!DATA.teams.length){ document.getElementById('content').innerHTML='<div class="empty">Nessun dato ancora disponibile.</div>'; return; }
+    render();
+  }catch(e){
+    document.getElementById('content').innerHTML='<div class="err">Impossibile caricare i dati ('+esc(e.message)+'). Riprova tra poco.</div>';
+  }
+}
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "fip-stats-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pagina pubblica con le statistiche Basket Venafro (U17/U19 Gold Campania), aggiornata da GitHub Actions",
+  "scripts": {
+    "fetch": "node fetch-stats.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
