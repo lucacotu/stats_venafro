@@ -211,9 +211,7 @@ function secPerGame(totalTime, games) {
 
 function finalizePlayer(a) {
   const g = a.games || 1;
-  const fg2m = a.inArcThrowsMade; const fg2a = a.inArcThrowsMade + a.inArcThrowsFailed;
-  const fg3m = a.outArcThrowsMade; const fg3a = a.outArcThrowsMade + a.outArcThrowsFailed;
-  const ftm = a.freeThrowsMade; const fta = a.freeThrowsMade + a.freeThrowsFailed;
+  const ftm = a.freeThrowsMade;
   return {
     number: a.number != null ? String(a.number) : '',
     name: a.name,
@@ -230,10 +228,9 @@ function finalizePlayer(a) {
     pf: round1(a.fouls / g),
     plusMinus: round1(a.plusMinus / g),
     rating: round1(a.fibaRating / g),
-    fg2: pct(fg2m, a.inArcThrowsFailed),
-    fg3: pct(fg3m, a.outArcThrowsFailed),
+    made2: round1(a.inArcThrowsMade / g),   // canestri da 2 a partita (l'app non ha i tentati)
+    made3: round1(a.outArcThrowsMade / g),  // canestri da 3 a partita
     ft: pct(ftm, a.freeThrowsFailed),
-    fg: pct(fg2m + fg3m, a.inArcThrowsFailed + a.outArcThrowsFailed),
     maxPts: a.maxPoints,
   };
 }
