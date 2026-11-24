@@ -226,6 +226,7 @@ function finalizePlayer(a) {
     blk: round1(a.blocks / g),
     tov: round1(a.turnovers / g),
     pf: round1(a.fouls / g),
+    rfouls: round1(a.receivedFouls / g), // falli subiti a partita
     plusMinus: round1(a.plusMinus / g),
     rating: round1(a.fibaRating / g),
     made2: round1(a.inArcThrowsMade / g),   // canestri da 2 a partita (l'app non ha i tentati)

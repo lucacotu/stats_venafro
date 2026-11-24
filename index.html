@@ -60,6 +60,7 @@
   tbody tr:nth-child(even) td.name{background:#171f2f}
   td.num{color:var(--muted);font-weight:700}
   td.pts{font-weight:700;color:var(--accent)}
+  td.pos{color:var(--good);font-weight:600} td.neg{color:var(--bad);font-weight:600}
   .foot{color:var(--muted);font-size:12px;margin-top:18px;text-align:center}
   .loading,.empty{padding:40px;text-align:center;color:var(--muted)}
   .err{background:rgba(255,93,93,.12);border:1px solid var(--bad);color:#ffd4d4;padding:12px 14px;border-radius:12px;margin-top:10px}
@@ -98,9 +99,11 @@ const COLS = [
   { key:'blk', label:'STO', type:'num' },
   { key:'tov', label:'PP', type:'num' },
   { key:'pf', label:'FALLI', type:'num' },
+  { key:'rfouls', label:'F.SUB', type:'num' },
   { key:'made2', label:'2P', type:'num' },
   { key:'made3', label:'3P', type:'num' },
   { key:'ft', label:'TL%', type:'pct' },
+  { key:'plusMinus', label:'+/-', type:'pm' },
   { key:'rating', label:'VAL', type:'num' },
   { key:'maxPts', label:'MAX', type:'num' },
 ];
@@ -114,9 +117,15 @@ function cellValue(p,col){
   const v=p[col.key];
   if(col.type==='min') return fmtMin(v);
   if(col.type==='pct') return fmtPct(v);
+  if(col.type==='pm') return v==null?'–':((v>0?'+':'')+v);
   if(col.key==='name') return esc(v);
   if(col.key==='number') return v?('#'+v):'';
   return v==null?'–':v;
+}
+function cellClass(p,col){
+  let c=col.cls||'';
+  if(col.type==='pm'){ const v=p[col.key]; if(v>0)c+=' pos'; else if(v<0)c+=' neg'; }
+  return c.trim();
 }
 
 function renderTabs(){
@@ -176,7 +185,7 @@ function renderTable(tm){
     const on=c.key===sortKey;
     return `<th class="${c.cls||''} ${on?'sorted':''}" data-k="${c.key}">${c.label}${on?` <span class="arrow">${sortDir<0?'▼':'▲'}</span>`:''}</th>`;
   }).join('');
-  const rows=sortPlayers(players).map(p=>`<tr>${COLS.map(c=>`<td class="${c.cls||''}">${cellValue(p,c)}</td>`).join('')}</tr>`).join('');
+  const rows=sortPlayers(players).map(p=>`<tr>${COLS.map(c=>`<td class="${cellClass(p,c)}">${cellValue(p,c)}</td>`).join('')}</tr>`).join('');
   return `<div class="tbl-wrap"><table><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
     <div class="sub" style="margin-top:8px">Tocca un'intestazione per ordinare. Medie per partita.</div>`;
 }
