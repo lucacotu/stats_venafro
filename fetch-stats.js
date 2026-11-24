@@ -279,13 +279,23 @@ async function collectTeam(fip, seasonId, cfg) {
     } catch { return null; }
   });
 
-  // 5) statistiche squadra dai punteggi reali dei tabellini
+  // 5) statistiche squadra: itero TUTTE le partite giocate (dal calendario), così
+  //    nessuna sparisce. Punteggio dal calendario; se manca, uso i totali del tabellino.
+  const boxByFid = {};
+  for (const bx of boxes) if (bx) boxByFid[bx.m.fid] = bx;
+
   let pf = 0, ps = 0, g = 0, pfH = 0, psH = 0, gH = 0, pfA = 0, psA = 0, gA = 0, won = 0, lost = 0;
   const results = [];
-  for (const bx of boxes) {
-    if (!bx) continue;
-    const { m, home, myScore, oppScore } = bx;
-    if (myScore <= 0 && oppScore <= 0) continue; // nessun punteggio valido
+  for (const m of played) {
+    const home = isHome(m, mid);
+    const tot = m.scores?.total || {};
+    let myScore = home ? num(tot.homeScore) : num(tot.awayScore);
+    let oppScore = home ? num(tot.awayScore) : num(tot.homeScore);
+    if (myScore <= 0 && oppScore <= 0) { // riserva: totali del tabellino
+      const bx = boxByFid[m.fid];
+      if (bx) { myScore = bx.myScore; oppScore = bx.oppScore; }
+    }
+    if (myScore <= 0 && oppScore <= 0) continue; // davvero nessun punteggio
     g++; pf += myScore; ps += oppScore;
     if (home) { gH++; pfH += myScore; psH += oppScore; } else { gA++; pfA += myScore; psA += oppScore; }
     const w = myScore > oppScore;

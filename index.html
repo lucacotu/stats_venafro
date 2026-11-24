@@ -15,7 +15,7 @@
   a{color:var(--accent2)}
   .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 60px}
   header.top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:6px}
-  .logo{width:46px;height:46px;border-radius:12px;background:var(--panel2);object-fit:contain;flex:none}
+  .logo{height:52px;width:auto;max-width:56px;object-fit:contain;flex:none}
   h1{font-size:22px;margin:0}
   .sub{color:var(--muted);font-size:13px}
   .tabs{display:flex;gap:8px;margin:16px 0}
@@ -186,7 +186,8 @@ function render(){
   document.getElementById('title').textContent = tm.name || 'Basket Venafro';
   document.getElementById('season').textContent = (tm.competition||'') + (DATA.season?(' · '+DATA.season):'');
   const slot=document.getElementById('logo-slot');
-  slot.innerHTML = tm.logo ? `<img class="logo" alt="" src="${encodeURI(tm.logo)}">` : '';
+  // Logo locale della società (uguale per entrambe le squadre).
+  slot.innerHTML = `<img class="logo" alt="Basket Venafro" src="logo.png">`;
   renderTabs();
   document.getElementById('content').innerHTML = teamCards(tm)+teamBoxes(tm)+renderTable(tm);
   document.querySelectorAll('thead th').forEach(th=>th.addEventListener('click',()=>{
