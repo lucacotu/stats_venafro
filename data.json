@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-24T15:47:48.840Z",
+  "generatedAt": "2026-11-24T16:00:49.011Z",
   "season": "2026/2027",
   "teams": [
     {
@@ -105,6 +105,8 @@
           "made2": 5.3,
           "made3": 0,
           "ft": 53.3,
+          "ftMade": 16,
+          "ftAtt": 30,
           "maxPts": 18
         },
         {
@@ -127,6 +129,8 @@
           "made2": 4,
           "made3": 0,
           "ft": 75,
+          "ftMade": 3,
+          "ftAtt": 4,
           "maxPts": 11
         },
         {
@@ -149,6 +153,8 @@
           "made2": 2.6,
           "made3": 1,
           "ft": 44.4,
+          "ftMade": 4,
+          "ftAtt": 9,
           "maxPts": 13
         },
         {
@@ -171,6 +177,8 @@
           "made2": 1.9,
           "made3": 1.1,
           "ft": 45.5,
+          "ftMade": 10,
+          "ftAtt": 22,
           "maxPts": 21
         },
         {
@@ -193,6 +201,8 @@
           "made2": 2.4,
           "made3": 0.8,
           "ft": 38.5,
+          "ftMade": 5,
+          "ftAtt": 13,
           "maxPts": 16
         },
         {
@@ -215,6 +225,8 @@
           "made2": 2.1,
           "made3": 0.6,
           "ft": 40,
+          "ftMade": 6,
+          "ftAtt": 15,
           "maxPts": 12
         },
         {
@@ -237,6 +249,8 @@
           "made2": 1.7,
           "made3": 0,
           "ft": 66.7,
+          "ftMade": 12,
+          "ftAtt": 18,
           "maxPts": 10
         },
         {
@@ -259,6 +273,8 @@
           "made2": 1.8,
           "made3": 0,
           "ft": 29.4,
+          "ftMade": 5,
+          "ftAtt": 17,
           "maxPts": 8
         },
         {
@@ -281,6 +297,8 @@
           "made2": 0.9,
           "made3": 0.6,
           "ft": 28.6,
+          "ftMade": 4,
+          "ftAtt": 14,
           "maxPts": 8
         },
         {
@@ -303,6 +321,8 @@
           "made2": 1,
           "made3": 0.5,
           "ft": 0,
+          "ftMade": 0,
+          "ftAtt": 1,
           "maxPts": 7
         },
         {
@@ -325,6 +345,8 @@
           "made2": 1,
           "made3": 0,
           "ft": null,
+          "ftMade": 0,
+          "ftAtt": 0,
           "maxPts": 4
         },
         {
@@ -347,6 +369,8 @@
           "made2": 0.2,
           "made3": 0.2,
           "ft": 37.5,
+          "ftMade": 3,
+          "ftAtt": 8,
           "maxPts": 6
         },
         {
@@ -369,6 +393,8 @@
           "made2": 0.7,
           "made3": 0,
           "ft": 7.7,
+          "ftMade": 1,
+          "ftAtt": 13,
           "maxPts": 4
         },
         {
@@ -391,6 +417,8 @@
           "made2": 0,
           "made3": 0.4,
           "ft": null,
+          "ftMade": 0,
+          "ftAtt": 0,
           "maxPts": 3
         },
         {
@@ -413,6 +441,8 @@
           "made2": 0.3,
           "made3": 0,
           "ft": 50,
+          "ftMade": 1,
+          "ftAtt": 2,
           "maxPts": 3
         },
         {
@@ -435,6 +465,8 @@
           "made2": 0,
           "made3": 0,
           "ft": 0,
+          "ftMade": 0,
+          "ftAtt": 2,
           "maxPts": 0
         }
       ]
@@ -521,6 +553,8 @@
           "made2": 5,
           "made3": 1,
           "ft": 100,
+          "ftMade": 2,
+          "ftAtt": 2,
           "maxPts": 15
         },
         {
@@ -543,6 +577,8 @@
           "made2": 2.8,
           "made3": 1.6,
           "ft": 65,
+          "ftMade": 13,
+          "ftAtt": 20,
           "maxPts": 17
         },
         {
@@ -565,6 +601,8 @@
           "made2": 5,
           "made3": 0,
           "ft": 40,
+          "ftMade": 4,
+          "ftAtt": 10,
           "maxPts": 13
         },
         {
@@ -587,6 +625,8 @@
           "made2": 1.8,
           "made3": 2,
           "ft": 46.2,
+          "ftMade": 6,
+          "ftAtt": 13,
           "maxPts": 19
         },
         {
@@ -609,6 +649,8 @@
           "made2": 3.8,
           "made3": 0.2,
           "ft": 60,
+          "ftMade": 6,
+          "ftAtt": 10,
           "maxPts": 12
         },
         {
@@ -631,6 +673,8 @@
           "made2": 2.6,
           "made3": 0.6,
           "ft": 33.3,
+          "ftMade": 2,
+          "ftAtt": 6,
           "maxPts": 13
         },
         {
@@ -653,6 +697,8 @@
           "made2": 1.8,
           "made3": 0.8,
           "ft": 27.3,
+          "ftMade": 3,
+          "ftAtt": 11,
           "maxPts": 8
         },
         {
@@ -675,6 +721,8 @@
           "made2": 1.2,
           "made3": 0.4,
           "ft": 28.6,
+          "ftMade": 2,
+          "ftAtt": 7,
           "maxPts": 6
         },
         {
@@ -697,6 +745,8 @@
           "made2": 0.8,
           "made3": 0.5,
           "ft": 80,
+          "ftMade": 4,
+          "ftAtt": 5,
           "maxPts": 9
         },
         {
@@ -719,6 +769,8 @@
           "made2": 0.8,
           "made3": 0,
           "ft": 0,
+          "ftMade": 0,
+          "ftAtt": 4,
           "maxPts": 4
         },
         {
@@ -741,6 +793,8 @@
           "made2": 0.5,
           "made3": 0,
           "ft": 50,
+          "ftMade": 1,
+          "ftAtt": 2,
           "maxPts": 4
         },
         {
@@ -763,6 +817,8 @@
           "made2": 0,
           "made3": 0.3,
           "ft": 100,
+          "ftMade": 2,
+          "ftAtt": 2,
           "maxPts": 3
         },
         {
@@ -785,6 +841,8 @@
           "made2": 0.3,
           "made3": 0,
           "ft": null,
+          "ftMade": 0,
+          "ftAtt": 0,
           "maxPts": 2
         },
         {
@@ -807,6 +865,8 @@
           "made2": 0,
           "made3": 0,
           "ft": null,
+          "ftMade": 0,
+          "ftAtt": 0,
           "maxPts": 0
         },
         {
@@ -829,6 +889,8 @@
           "made2": 0,
           "made3": 0,
           "ft": null,
+          "ftMade": 0,
+          "ftAtt": 0,
           "maxPts": 0
         },
         {
@@ -851,6 +913,8 @@
           "made2": 0,
           "made3": 0,
           "ft": 0,
+          "ftMade": 0,
+          "ftAtt": 2,
           "maxPts": 0
         }
       ]
