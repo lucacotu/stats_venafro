@@ -232,6 +232,8 @@ function finalizePlayer(a) {
     made2: round1(a.inArcThrowsMade / g),   // canestri da 2 a partita (l'app non ha i tentati)
     made3: round1(a.outArcThrowsMade / g),  // canestri da 3 a partita
     ft: pct(ftm, a.freeThrowsFailed),
+    ftMade: a.freeThrowsMade,                       // liberi segnati (totali)
+    ftAtt: a.freeThrowsMade + a.freeThrowsFailed,   // liberi tentati (totali)
     maxPts: a.maxPoints,
   };
 }

@@ -102,6 +102,7 @@ const COLS = [
   { key:'rfouls', label:'F.SUB', type:'num' },
   { key:'made2', label:'2P', type:'num' },
   { key:'made3', label:'3P', type:'num' },
+  { key:'ftMade', label:'TL S/T', type:'ftshots' },
   { key:'ft', label:'TL%', type:'pct' },
   { key:'plusMinus', label:'+/-', type:'pm' },
   { key:'rating', label:'VAL', type:'num' },
@@ -118,6 +119,7 @@ function cellValue(p,col){
   if(col.type==='min') return fmtMin(v);
   if(col.type==='pct') return fmtPct(v);
   if(col.type==='pm') return v==null?'–':((v>0?'+':'')+v);
+  if(col.type==='ftshots') return (p.ftAtt==null)?'–':(`${p.ftMade||0}/${p.ftAtt}`);
   if(col.key==='name') return esc(v);
   if(col.key==='number') return v?('#'+v):'';
   return v==null?'–':v;
